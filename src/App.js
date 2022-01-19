@@ -1,28 +1,29 @@
-import react, { useState, useEffect } from "react";
 import "./App.css";
+import { useState, useEffect } from "react";
 
 function App() {
-  const [text, setText] = useState("");
+  const [notes, setNotes] = useState("");
 
-  const clearText = () => {
-    setText("");
+  const inputTextHandler = (e) => {
+    setNotes(e.target.value);
+    console.log(notes);
   };
 
-  const saveText = () => {
-    localStorage.setItem("note", JSON.stringify(text));
-    setText("");
+  const saveToLocal = () => {
+    localStorage.setItem("note", notes);
   };
 
-  // useEffect(() => {
-  //   const data = localStorage.getItem("note", text);
-  //   setText(data);
-  // }, [text]);
+  const clearLocal = () => {
+    document.querySelector(".textarea").value = "";
+    localStorage.clear();
+    localStorage.removeItem("note");
+  };
 
-  window.addEventListener("load", function () {
-    const data = localStorage.getItem("note", text);
-    setText(data);
-    console.log(data);
-  });
+  useEffect(() => {
+    if (notes === "") {
+      setNotes(localStorage.getItem("note"));
+    }
+  }, [notes]);
 
   return (
     <div className="App">
@@ -30,20 +31,20 @@ function App() {
         <div className="field">
           <div className="control">
             <textarea
-              onChange={(e) => setText(e.target.value)}
+              onChange={inputTextHandler}
               className="textarea is-large"
               placeholder="Notes..."
-              value={text}
+              value={notes}
             />
           </div>
         </div>
         <button
-          onClick={saveText}
+          onClick={saveToLocal}
           className="button is-large is-primary is-active"
         >
           Save
         </button>
-        <button onClick={clearText} className="button is-large">
+        <button onClick={clearLocal} className="button is-large">
           Clear
         </button>
       </div>
